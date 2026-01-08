@@ -20,6 +20,7 @@ Marks bad channels and time segments in MNE raw MEG/EEG data using `raw.info['ba
 
 - **mne** (string): Path to input MNE raw `.fif` file
 - **bads** (string, optional): Comma-separated list of channel names to mark as bad (e.g., "MEG2423,MEG2422,EEG001"). Leave empty if no additional channels need to be marked.
+- **reset_bads** (boolean, optional): If `true`, clears any bad channels already marked in the input file before marking new ones. If `false` (default), appends new bad channels to existing ones. Default: `false`
 - **annotations** (string, optional): Multiline text describing time segments to annotate. Each line follows the format: "onset, duration, description[, channels]"
   - **onset**: Start time in seconds
   - **duration**: Duration in seconds
@@ -36,10 +37,11 @@ Marks bad channels and time segments in MNE raw MEG/EEG data using `raw.info['ba
 
 The app:
 1. Loads the raw MNE data file
-2. Marks additional channels as bad if specified in config
-3. Adds time-based annotations if specified in config
-4. Saves the updated raw data with marked bad channels and annotations
-5. Generates a product.json with detailed information
+2. Optionally resets bad channels if `reset_bads` is enabled
+3. Marks additional channels as bad if specified in config
+4. Adds time-based annotations if specified in config
+5. Saves the updated raw data with marked bad channels and annotations
+6. Generates a product.json with detailed information
 
 ## Technical Details
 

@@ -55,6 +55,11 @@ data_file = config['mne']
 raw = mne.io.read_raw_fif(data_file, verbose=False)
 
 # == MARK BAD CHANNELS ==
+# Reset bad channels if requested
+reset_bads = config.get('reset_bads', False)
+if reset_bads:
+    raw.info['bads'] = []
+
 if config['bads']:
     # Parse comma-separated channel names
     bads = config['bads'].split(',')
