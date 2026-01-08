@@ -1,39 +1,72 @@
-# Mark bad segments and channels
+# app-mark_bad-raw
 
-Brainlife App to reject bad data segments and/or channels MNE-Python [raw.info['bads']](https://mne.tools/stable/auto_tutorials/preprocessing/15_handling_bad_channels.html), and [mne.Annotations](https://mne.tools/stable/generated/mne.Annotations.html#mne-annotations).
+[![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
+[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.XXX-blue.svg)](https://doi.org/10.25663/brainlife.app.XXX)
 
-# Documentation
+## Description
 
-#### Input files are:
-* a MEG file in fif format (mne/raw).
+Marks bad channels and time segments in MNE raw MEG/EEG data using `raw.info['bads']` and `mne.Annotations`. Channels marked as bad are excluded from analysis, and annotations describe segments of data to be discarded (e.g., movement artifacts, signal dropout).
 
-#### Input parameters are:
-* ` Bads `:  str ,  The comma-separated channels to reject (e.g. "MEG2422,MEG2321").
-* ` annotations `:  str , A multiline text describing segments to discard, following a format compatible with mne.Annotations:
-    "start, duration, description[, channels]"
+## Inputs
 
-    For instance:
-      
-      2, 1, bad_segment
-      5, 1, more_selective, MEG2422, MEG2321
-      
-    will create two annotations, one named "bad_segment" starting at 2s, with duration 1s, and second one named "more_selective" focused on channels MEG2422 and MEG2321, starting at 5s, with duration 1s.
+- **mne**: Path to MNE raw `.fif` file
 
-#### Ouput files are:
-  * the updated MEG file in fif format (mne/raw), where `raw.info['bads']` has been updated, and with added `raw.annotations`.
+## Outputs
+
+- **out_dir/raw.fif**: Raw data with marked bad channels and annotations
+- **product.json**: Summary of marked channels and annotations
+
+## Configuration Parameters
+
+- **mne** (string): Path to input MNE raw `.fif` file
+- **bads** (string, optional): Comma-separated list of channel names to mark as bad (e.g., "MEG2423,MEG2422,EEG001"). Leave empty if no additional channels need to be marked.
+- **annotations** (string, optional): Multiline text describing time segments to annotate. Each line follows the format: "onset, duration, description[, channels]"
+  - **onset**: Start time in seconds
+  - **duration**: Duration in seconds
+  - **description**: Label for the annotation
+  - **channels** (optional): Specific channels affected by the annotation
+  
+  Example:
+  ```
+  2, 2, bad_segment
+  5, 2, movement_artifact, MEG2121, MEG2122
+  ```
+
+## Usage
+
+The app:
+1. Loads the raw MNE data file
+2. Marks additional channels as bad if specified in config
+3. Adds time-based annotations if specified in config
+4. Saves the updated raw data with marked bad channels and annotations
+5. Generates a product.json with detailed information
+
+## Technical Details
+
+- **Bad Channels**: Marked in `raw.info['bads']` and excluded from analysis in downstream apps
+- **Annotations**: Stored in `raw.annotations` and can be used for segment-level quality control
+- **Channel Validation**: Invalid channel names in both bads and annotations are validated against the input file
+- **Preload**: Data is loaded and saved efficiently without full preload unless needed
 
 ## Authors
-- [Maximilien Chaumon](maximilien.chaumon@icm-institute.org)
+- Maximilien Chaumon (maximilien.chaumon@icm-institute.org)
 
-### Funding Acknowledgement
-brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your code and publications. Copy and past the following lines into your repository when using this code.
+## Citations
+
+We kindly ask that you cite the following articles when publishing papers and code using this app:
+
+**brainlife.io: A decentralized and open source cloud platform to support neuroscience research**. Hayashi, S., Caron, B. A., et al. & Pestilli, F. (2023). ArXiv. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10274934/
+
+**MEG and EEG data analysis with MNE-Python**. Gramfort A, et al. & Hämäläinen MS. (2013). Frontiers in Neuroscience, 7(267):1–13. https://doi.org/10.3389/fnins.2013.00267
+
+## Funding Acknowledgement
+
+brainlife.io is publicly funded and for the sustainability of the project we kindly ask that you acknowledge the following funding sources:
 
 [![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
 [![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
 [![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
 [![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
-[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
+[![NIH-NIBIB-R01EB030896](https://img.shields.io/badge/NIH_NIBIB-R01EB030896-green.svg)](https://grantome.com/grant/NIH/R01-EB030896-01)
 
-### Citations
-1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
-
+#### MIT Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
