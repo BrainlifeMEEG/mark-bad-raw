@@ -18,9 +18,11 @@ Outputs:
     - product.json: Summary of marked channels and annotations
 """
 
-# Copyright (c) 2020 brainlife.io
+# Copyright (c) 2026 brainlife.io
 #
 # This app marks bad segments and channels "by hand" in a MNE/raw file
+#
+# Author: Maximilien Chaumon (https://github.com/dnacombo)
 
 import sys
 import os
