@@ -53,7 +53,7 @@ ensure_output_dirs('out_dir')
 config = load_config()
 
 # == LOAD DATA ==
-data_file = config['mne']
+data_file = config['raw']
 raw = mne.io.read_raw_fif(data_file, verbose=False)
 
 # == MARK BAD CHANNELS ==
