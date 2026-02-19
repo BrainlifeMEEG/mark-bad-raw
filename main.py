@@ -131,12 +131,12 @@ add_raw_info_to_product(product_items, raw)
 # Add marked bad channels summary
 if raw.info['bads']:
     bads_msg = f"Marked bad channels: {', '.join(raw.info['bads'])}"
-    add_info_to_product(product_items, bads_msg)
+    add_info_to_product(product_items, bads_msg, msg_type='success')
 
 # Add annotations summary
 if raw.annotations:
     n_annotations = len(raw.annotations)
     annot_msg = f"Added {n_annotations} annotation(s)"
-    add_info_to_product(product_items, annot_msg)
+    add_info_to_product(product_items, annot_msg, msg_type='success')
 
 create_product_json(product_items)
