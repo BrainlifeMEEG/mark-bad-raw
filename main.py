@@ -75,6 +75,19 @@ if config['bads']:
         raw.info['bads'].extend(bads)
         raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
 
+if config['channels']:
+    # read channels from file
+    with open(config['channels'], 'r') as f:
+        bads = f.read()
+    # split by any separator and trim spaces
+    bads = re.split(r'[,\n]+', bads)
+    bads = [b.strip() for b in bads if b.strip() != '']
+    # Filter to only channels that exist in the raw file
+    bads = [ch for ch in bads if ch in raw.ch_names]
+    if bads:
+        raw.info['bads'].extend(bads)
+        raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
+
 # == ADD ANNOTATIONS ==
 nuan = config.get("annotations")
 if nuan:
