@@ -9,7 +9,7 @@ to be discarded (e.g., movement artifacts, signal dropout).
 Inputs:
     - config.json:
       - mne: Path to MNE raw .fif file
-      - bads: Optional comma-separated list of channel names to mark as bad
+      - bads: channels.tsv file of channels to mark as bad (optional)
       - annotations: Optional multiline annotations in format:
         "onset, duration, description[, channels]"
 
@@ -32,6 +32,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'brainlife_utils'))
 # Standard imports
 import numpy as np
 import mne
+import pandas as pd
 
 # Import shared utilities
 from brainlife_utils import (
@@ -76,18 +77,13 @@ if config['bads']:
         raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
 
 if config['channels']:
-    # read channels from file
-    with open(config['channels'], 'r') as f:
-        bads = f.read()
-    # split by any separator and trim spaces
-    bads = re.split(r'[,\n]+', bads)
-    bads = [b.strip() for b in bads if b.strip() != '']
-    # Filter to only channels that exist in the raw file
-    bads = [ch for ch in bads if ch in raw.ch_names]
-    if bads:
-        raw.info['bads'].extend(bads)
-        raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
-
+    # read channels.tsv
+    channels_tsv = config['channels']
+    channels_df = pd.read_csv(channels_tsv, sep='\t')
+    for _, row in channels_df.iterrows():
+        if row.get('status', '').lower() == 'bad' and row['name'] in raw.ch_names:
+            raw.info['bads'].append(row['name'])
+    raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
 # == ADD ANNOTATIONS ==
 nuan = config.get("annotations")
 if nuan:
