@@ -2,6 +2,8 @@
 #PBS -l nodes=1:ppn=1
 #PBS -l walltime=02:00:00
 #PBS -N mark_bad_raw
+#SBATCH --mem=20G
+
 
 # Copyright (c) 2020 brainlife.io at University of Texas at Austin and Indiana University
 # 
