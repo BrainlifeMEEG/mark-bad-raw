@@ -41,6 +41,7 @@ from brainlife_utils import (
     ensure_output_dirs,
     create_product_json,
     add_info_to_product,
+    add_image_to_product,
     add_raw_info_to_product
 )
 
@@ -48,7 +49,7 @@ from brainlife_utils import (
 setup_matplotlib_backend()
 
 # Ensure output directories exist
-ensure_output_dirs('out_dir')
+ensure_output_dirs('out_dir', 'out_figs')
 
 # Load configuration
 config = load_config()
@@ -122,6 +123,11 @@ if nuan:
 # == SAVE DATA ==
 raw.save(os.path.join('out_dir', 'raw.fif'), overwrite=True)
 
+# == CREATE PSD PLOT ==
+fig = raw.compute_psd().plot(exclude='bads', show=False)
+fig.savefig(os.path.join('out_figs', 'psd.png'), dpi=100, bbox_inches='tight')
+plt.close(fig)
+
 # == CREATE PRODUCT JSON ==
 product_items = []
 
@@ -138,5 +144,10 @@ if raw.annotations:
     n_annotations = len(raw.annotations)
     annot_msg = f"Added {n_annotations} annotation(s)"
     add_info_to_product(product_items, annot_msg, msg_type='success')
+
+# Add PSD plot if it exists
+psd_image_path = os.path.join('out_figs', 'psd.png')
+if os.path.exists(psd_image_path):
+    add_image_to_product(product_items, name='Power Spectral Density (PSD)', filepath=psd_image_path)
 
 create_product_json(product_items)
