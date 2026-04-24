@@ -76,7 +76,7 @@ if config['bads']:
     bads = [ch for ch in bads if ch in raw.ch_names]
     if bads:
         raw.info['bads'].extend(bads)
-        raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
+        raw.info['bads'] = sorted(set(raw.info['bads']))  # Remove duplicates
 
 if config['channels']:
     # read channels.tsv
@@ -85,7 +85,7 @@ if config['channels']:
     for _, row in channels_df.iterrows():
         if row.get('status', '').lower() == 'bad' and row['name'] in raw.ch_names:
             raw.info['bads'].append(row['name'])
-    raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
+    raw.info['bads'] = sorted(set(raw.info['bads']))  # Remove duplicates
 
 # == ADD ANNOTATIONS ==
 nuan = config.get("annotations")
