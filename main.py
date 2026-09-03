@@ -78,7 +78,7 @@ if config['bads']:
         raw.info['bads'].extend(bads)
         raw.info['bads'] = list(set(raw.info['bads']))  # Remove duplicates
 
-if config['channels']:
+if config.get('channels'):
     # read channels.tsv
     channels_tsv = config['channels']
     channels_df = pd.read_csv(channels_tsv, sep='\t')
