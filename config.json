@@ -1,5 +1,5 @@
 {
-    "mne": "/network/lustre/iss02/cenir/analyse/meeg/BRAINLIFE/datasets/ds000117/sub-01/ses-meg/meg/sub-01_ses-meg_task-facerecognition_run-01_meg.fif",
+    "mne": "/path/to/sub-01_task-example_raw.fif",
     "bads": ["MEG2423", "MEG2422"],
     "annotations": "2,2,bibi\n5,2,bad_bobo,MEG2121"
 }
